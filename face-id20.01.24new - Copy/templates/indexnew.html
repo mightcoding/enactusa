@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Сделать фото с камеры</title>
+</head>
+<body>
+    <h1>Сделать фото с камеры</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Сфотографировать</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+        // Получаем доступ к видеопотоку с помощью getUserMedia API
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                let video = document.getElementById('video');
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("Возникла ошибка при доступе к камере: " + err);
+            });
+
+        // Обработка события клика на кнопке сфотографировать
+        document.getElementById('snap').addEventListener('click', function() {
+            let video = document.getElementById('video');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+
+            // Рисуем кадр видео на холст
+            context.drawImage(video, 0, 0, 640, 480);
+            
+            // Преобразуем изображение в формат data URL и выводим его
+            let dataURL = canvas.toDataURL('image/png');
+            console.log(dataURL); // Выводим строку эскиза изображения в консоль
+        });
+    </script>
+</body>
+</html>

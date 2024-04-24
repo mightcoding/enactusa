@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Video and Convert to Audio</title>
+</head>
+<body>
+    <h1>Upload Video and Convert to Audio</h1>
+    <input type="file" id="videoInput" accept="video/*">
+    <button id="uploadButton">Upload and Convert</button>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            var videoInput = document.getElementById('videoInput').files[0];
+            var formData = new FormData();
+            formData.append('video', videoInput);
+
+            // Отправка видеофайла на сервер
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Если видео успешно загружено и обработано на сервере, можно получить и сохранить аудиофайл
+                    var audioBlob = xhr.response;
+                    var audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    // Создание ссылки для скачивания аудиофайла
+                    var downloadLink = document.createElement('a');
+                    downloadLink.href = audioUrl;
+                    downloadLink.download = 'output_audio.mp3';
+                    downloadLink.click();
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+</body>
+</html>
